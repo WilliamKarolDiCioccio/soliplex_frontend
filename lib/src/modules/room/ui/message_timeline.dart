@@ -22,6 +22,7 @@ class MessageTimeline extends StatefulWidget {
     this.onFeedbackSubmit,
     this.onInspect,
     this.onShowChunkVisualization,
+    this.onFormSubmit,
   });
 
   final String roomId;
@@ -33,6 +34,7 @@ class MessageTimeline extends StatefulWidget {
       onFeedbackSubmit;
   final void Function(String runId)? onInspect;
   final void Function(SourceReference)? onShowChunkVisualization;
+  final void Function(String text)? onFormSubmit;
 
   @override
   State<MessageTimeline> createState() => _MessageTimelineState();
@@ -211,6 +213,7 @@ class _MessageTimelineState extends State<MessageTimeline> {
                       onFeedbackSubmit: widget.onFeedbackSubmit,
                       onInspect: widget.onInspect,
                       onShowChunkVisualization: widget.onShowChunkVisualization,
+                      onFormSubmit: widget.onFormSubmit,
                       executionTracker: widget.executionTrackers[message.id] ??
                           (message is LoadingMessage
                               ? widget.executionTrackers[awaitingTrackerKey]

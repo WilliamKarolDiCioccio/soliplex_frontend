@@ -97,6 +97,17 @@ class AgUiStreamClient {
           name: 'soliplex_client.agui_stream',
           level: 900,
         );
+      // ignore: avoid_catching_errors
+      } on ArgumentError catch (e) {
+        // Thinking models emit REASONING_* event types unknown to the
+        // AG-UI SDK — EventType.fromString throws ArgumentError for these.
+        // Silently drop them so the stream continues to RUN_FINISHED.
+        skippedEventCount++;
+        developer.log(
+          'Skipped unknown AG-UI event type: $e',
+          name: 'soliplex_client.agui_stream',
+          level: 900,
+        );
       }
     }
     if (skippedEventCount > 0) {

@@ -882,6 +882,11 @@ class _RoomScreenState extends State<RoomScreen> {
                         documentTitle: ref.displayTitle,
                         pageNumbers: ref.pageNumbers,
                       ),
+                      onFormSubmit: (text) => threadView.sendMessage(
+                        text,
+                        _state.runtime,
+                        stateOverlay: _buildStateOverlay(),
+                      ),
                     ),
           },
         ),

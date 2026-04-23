@@ -20,6 +20,7 @@ class MessageTile extends StatelessWidget {
     this.onShowChunkVisualization,
     this.executionTracker,
     this.streamingActivity,
+    this.onFormSubmit,
   });
 
   final String roomId;
@@ -32,6 +33,7 @@ class MessageTile extends StatelessWidget {
   final void Function(SourceReference)? onShowChunkVisualization;
   final ExecutionTracker? executionTracker;
   final ActivityType? streamingActivity;
+  final void Function(String text)? onFormSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,24 @@ class MessageTile extends StatelessWidget {
           ),
         final ToolCallMessage m => ToolCallTile(message: m),
         final ErrorMessage m => ErrorMessageTile(message: m),
-        final GenUiMessage m => GenUiTile(message: m),
+        final GenUiMessage m => GenUiTile(
+            message: m,
+            onFormSubmit: onFormSubmit != null
+                ? (_, answers) {
+                    final buf = StringBuffer();
+                    for (final e in answers.entries) {
+                      final v = e.value;
+                      final display = switch (v) {
+                        final bool b => b ? 'Yes' : 'No',
+                        final List<dynamic> l => l.join(', '),
+                        _ => '$v',
+                      };
+                      buf.writeln('${e.key}: $display');
+                    }
+                    onFormSubmit!(buf.toString().trimRight());
+                  }
+                : null,
+          ),
         final LoadingMessage m => LoadingMessageTile(
             roomId: roomId,
             messageId: m.id,
